@@ -22,6 +22,7 @@ import java.util.Random;
 
 public class ChooseOrder extends Application {
     private Stage primaryStage;
+    private ListView<Label> listOrder;
 
     public static void main(String[] args) { launch(args); }
 
@@ -59,8 +60,6 @@ public class ChooseOrder extends Application {
             public void handle(MouseEvent mouseEvent) {
                 System.out.println("History");
                 OrderViewPage his = new OrderViewPage();
-//                root.getChildren().setAll(his.getRootpane());
-//                primaryStage.setScene(new Scene(his.getRootpane(), 350, 320));
                 scrollPane.setContent(his.getRootpane());
             }
         });
@@ -118,6 +117,9 @@ public class ChooseOrder extends Application {
             add.setOnAction(event -> {
                 System.out.println("+");
                 increaseNumber(number);
+                int priceInt = Integer.parseInt(e.getPrice());
+                int numInt = Integer.parseInt(number.getText());
+                EdiblesList.getInstance().addList(name.getText(), priceInt, numInt);
             });
             addminus.getChildren().addAll(minus, number, add);
             description.getChildren().addAll(name, eachPrice, addminus);
@@ -158,12 +160,5 @@ public class ChooseOrder extends Application {
         }
     }
 
-    class AddOrder implements EventHandler<ActionEvent> {
-        @Override
-        public void handle(ActionEvent event) {
-            AnchorPane anchorPane = new AnchorPane();
-//            for(Edibles e : )
-        }
-    }
 }
 
