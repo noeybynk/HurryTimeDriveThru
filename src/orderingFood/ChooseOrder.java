@@ -91,6 +91,8 @@ public class ChooseOrder extends Application {
         Random rng = new Random();
         VBox imgBox = new VBox();
         imgBox.setSpacing(30);
+//        TextField number = new TextField();
+        int count = 0;
 
         for (Edibles e : EdibleFactory.getEdibles(category)) {
             HBox horizon = new HBox(50);
@@ -106,7 +108,7 @@ public class ChooseOrder extends Application {
             name.setFont(new Font("elephant", 20.0));
             Label eachPrice = new Label(e.getPrice()+" Baht.");
             eachPrice.setFont(new Font("Arial", 18.0));
-            TextField number = new TextField("0");
+            TextField number = new TextField(String.valueOf(count));
             number.setPrefWidth(50.0);
             Button minus = new Button("-");
             minus.setOnAction(event -> {

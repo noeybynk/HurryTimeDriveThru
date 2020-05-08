@@ -2,8 +2,6 @@ package orderingFood;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.css.converter.StringConverter;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -13,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.image.ImageView;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +30,7 @@ public class OrderViewPage {
         String csv  = order.replace("[", "").replace("]", "")
                 .replace(", ", "\n");
         listOrder = new ListView<String>(FXCollections.observableArrayList(csv));
-//        listOrder.getItems().add(csv);
+
         HBox hbButtons = new HBox();
         Button confirm = new Button("Confirm Order!");
         confirm.setOnAction(new EnterEmail());
@@ -49,10 +48,11 @@ public class OrderViewPage {
     }
     public Pane getRootpane() { return rootPane; }
 
-    public List<String> AddItemOrder(List<String> list) {
+    public List<String> AddItemOrder() {
         int count = 0;
         int price = EdiblesList.getInstance().getPrice();
         int payment = 0;
+        list = EdiblesList.getInstance().getList();
         List<String> collect = new ArrayList<>();
         for (int i=0; i<list.size(); i++){
             for(int j=0; j<list.size(); j++) {
@@ -79,27 +79,46 @@ public class OrderViewPage {
             dialog.setGraphic(img);
 
             TextField addemail = new TextField();
-            addemail.setPromptText("please enter your email");
+            if(addemail.getText().length() > 0) {
+                try {
+                    System.out.println("eiei");
+                } catch (NumberFormatException nfe) {
+                    addemail.setStyle("-fx-border-color: red;");
+                    addemail.setPromptText("please enter your email");
+                }
+            }
 
             // Set the button types.
             ButtonType emailbtType = new ButtonType("confirm!", ButtonBar.ButtonData.OK_DONE);
+//            Button confirmbt = new Button("confirm!");
+//            Button cancelbt = new Button("cancel");
             dialog.getDialogPane().getButtonTypes().addAll(emailbtType, ButtonType.CANCEL);
+
+//            if(addemail.getText().length() > 0) catch (Exception e) {
+//                    addemail.setStyle("-fx-border-color: red;");
+//                    addemail.setPromptText("please enter your email");
 
             GridPane grid = new GridPane();
             grid.setHgap(10);
             grid.setVgap(10);
             grid.setPadding(new Insets(20, 150, 10, 10));
-
             grid.add(new Label("email: "), 0, 0);
             grid.add(addemail, 1, 0);
+
 
             // Enable/Disable confirm button depending on whether a username was entered.
             Node emailButton = dialog.getDialogPane().lookupButton(emailbtType);
             emailButton.setVisible(true);
             emailButton.setOnMouseClicked(mouseEvent -> {
-                if (addemail.getText().length() == 0) {
-
+                if (addemail.getText().length() >= 0) {
+                    try{
+                        addemail.setText("eiei");
+                    }catch (NumberFormatException e) {
+                        addemail.setStyle("-fx-border-color: red;");
+                        addemail.setPromptText("please enter your email");
+                    }
                 }
+                System.out.println("test");
             });
 
             dialog.getDialogPane().setContent(grid);
@@ -107,16 +126,42 @@ public class OrderViewPage {
             // Request focus on the email field by default.
             Platform.runLater(() -> addemail.requestFocus());
 
-            Optional<String> result = dialog.showAndWait();
-            if (result.isPresent()) {
-                System.out.println("Your email: " + result.isPresent() + "has received code.");
-                Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+//            Optional<String> result = dialog.showAndWait();
+//            if (result.isPresent()) {
+//                System.out.println("Your email: " + result.isPresent() + "has received code.");
+////                emailButton.setOnMouseClicked(mouseEvent -> {
+////                    if(addemail.getText().length() > 0) {
+////                        try {
+////                            System.out.println("eiei");
+////                        } catch (NumberFormatException nfe) {
+////                            addemail.setStyle("-fx-border-color: red;");
+////                            addemail.setPromptText("please enter your email");
+////                        }
+////                    }
+////                });
+//            }
+
+            Optional<ButtonType> result = dialog.showAndWait();
+            if(result.get() == emailbtType) {
+                if (addemail.getText().length() > 0) throw new NullPointerException() {
+                    String email = addemail.getText();
+
+                } else if(addemail.getText().isEmpty()) {
+                    System.out.println("error");
+                    addemail.setStyle("-fx-border-color: red;");
+                    addemail.setPromptText("please enter your email");
+//                }
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("Success sending");
                 alert.setHeaderText(null);
                 alert.setContentText("We have already sent ordering code. Now, you can drive your car to " +
                         "food waiting point for payment and getting food.");
                 alert.showAndWait();
-            }
+                }
+                System.out.println("ok");
+                } else if (result.get() == ButtonType.CANCEL) {
+                    System.out.println("out");
+                }
 
             dialog.setResultConverter(dialogButton -> {
                 if (dialogButton == emailbtType) {
