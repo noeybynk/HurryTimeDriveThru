@@ -2,7 +2,6 @@ package orderingFood;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
-import javafx.css.converter.LadderConverter;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -178,8 +177,8 @@ public class OrderViewPage {
     public void generateAndSendEmail(TextField email) throws AddressException, MessagingException {
 
         String smtpHost="smtp.gmail.com";
-        String smtpUser="boonyanuch.noey2000@gmail.com";
-        String smtpPassword="nnynoey040443";
+        String smtpUser="hurrytime.drivethru@gmail.com";
+        String smtpPassword="HurryTime123";
         int smtpPort=587;//Port may vary.Check yours smtp port
         // Step1
         System.out.println("\n 1st ===> setup Mail Server Properties..");
@@ -206,7 +205,7 @@ public class OrderViewPage {
                 "Please drive to the Food Pick Up Point to get your order by showing OTP that we sent to you " +
                 "via e-mail. The payment can be settled by cash, E-wallet or debit/credit card.<br>" +
                 "Thank you for ordering with us.  We hope to serve you again in the near future. <br><br>" +
-                "Yours sincerely,<br> Hurrytime Drivethru<br><br>You OTP is : " + new String(OTP(6));
+                "Yours sincerely,<br> Hurrytime Drivethru<br><br>Your OTP is : " + new String(OTP(6));
 
         generateMailMessage.setContent(emailBody, "text/html");
         System.out.println("Mail Session has been created successfully..");
@@ -224,7 +223,7 @@ public class OrderViewPage {
 
     public char[] OTP(int len) {
 //        System.out.println("Generating OTP using random() : ");
-        System.out.print("You OTP is : ");
+        System.out.print("Your OTP is : ");
 
         // Using numeric values
         String numbers = "0123456789";
