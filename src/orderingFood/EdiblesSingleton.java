@@ -3,43 +3,41 @@ package orderingFood;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EdiblesList {
+public class EdiblesSingleton {
 
-    private static EdiblesList instance = null;
-    private List<String> list;
+    private static EdiblesSingleton instance = null;
+    private List<EdiblesItem> list;
     private String name;
-    private int price;
-    private int quantity;
 
-    private EdiblesList(){ list = new ArrayList<>(); }
-    public static EdiblesList getInstance() {
+    private EdiblesSingleton(){ list = new ArrayList<>(); }
+    public static EdiblesSingleton getInstance() {
         if(instance == null) {
-            instance = new EdiblesList();
+            instance = new EdiblesSingleton();
         }
         return instance;
     }
 
     public void setName(String name) { this.name = name; }
-    public String getName() { return name; }
+    public String getName() { return this.name; }
 
-    public void setPrice(int price) {this.price = price; }
-    public int getPrice() {return price;}
-
-    public void setQuantity(int quantity) {this.quantity = quantity; }
-    public int getQuantity() {return quantity;}
-
-    public void setPayment(int price, int quantity) {
-        this.price = price;
-        this.quantity = quantity;
+    public void addList(Edibles edibles, int quantity) {
+        if(list.size() > 0) {
+            for(int i=0; i<list.size(); i++) {
+                if(list.get(i).getName().equals(edibles.nameWithSpace(edibles.toString()))) {
+                    list.get(i).SetTotalPrice(Integer.parseInt(edibles.getPrice()), quantity);
+                    return;
+                }
+            }
+            list.add(new EdiblesItem(edibles, quantity));
+        } else {
+            list.add(new EdiblesItem(edibles, quantity));
+        }
     }
-    public int getPayment() {
-        return price*quantity;
-    }
 
-    public void addList(String name, int price, int quantity) {
-        list.add(name + " " + price*quantity + "Baht.");
-    }
-    public List<String> getList() {
+//    public void removeList(Edibles eatting) {
+//        if(eatting)
+//    }
+    public List<EdiblesItem> getList() {
         return this.list;
     }
 }
