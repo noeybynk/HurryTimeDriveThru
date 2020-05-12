@@ -34,9 +34,22 @@ public class EdiblesSingleton {
         }
     }
 
-//    public void removeList(Edibles eatting) {
-//        if(eatting)
-//    }
+    public void removeList(Edibles edibles, int quantity) {
+        if (list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).getName().equals(edibles.nameWithSpace(edibles.toString()))) {
+                    list.get(i).SetTotalPrice(Integer.parseInt(edibles.getPrice()), quantity);
+                    if(list.get(i).getPrice() == 0) {
+                        list.remove(list.get(i));
+                    }
+                    return;
+                }
+            }
+            list.remove(new EdiblesItem(edibles, quantity));
+        } else {
+            list.remove(new EdiblesItem(edibles, quantity));
+        }
+    }
     public List<EdiblesItem> getList() {
         return this.list;
     }
