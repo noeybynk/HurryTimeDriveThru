@@ -3,8 +3,6 @@ package orderingFood;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.Button;
@@ -119,9 +117,8 @@ public class ChooseOrder extends Application {
             add.setOnAction(event -> {
                 System.out.println("+");
                 increaseNumber(number);
-                int priceInt = Integer.parseInt(e.getPrice());
                 int numInt = Integer.parseInt(number.getText());
-                EdiblesList.getInstance().addList(name.getText(), priceInt, numInt);
+                EdiblesSingleton.getInstance().addList(e, numInt);
             });
             addminus.getChildren().addAll(minus, number, add);
             description.getChildren().addAll(name, eachPrice, addminus);
