@@ -1,6 +1,5 @@
 package orderingFood;
 
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -18,19 +17,17 @@ import javax.mail.Transport;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import java.io.IOException;
 import java.util.*;
 
 public class OrderViewPage {
     private final BorderPane rootPane;
     private ListView<String> listOrder;
-    List<String> list;
-    List<String> listcollect;
+    List<EdiblesItem> list;
 
     public OrderViewPage() {
         VBox vbCenter = new VBox(); // use any container as center pane e.g. VBox
         // bottom respectively "button area"
-        list = EdiblesList.getInstance().getList();
+        list = EdiblesSingleton.getInstance().getList();
         String order = list.toString();
         String csv  = order.replace("[", "").replace("]", "")
                 .replace(", ", "\n");
@@ -52,22 +49,6 @@ public class OrderViewPage {
         rootPane.setBottom(bottom);
     }
     public Pane getRootpane() { return rootPane; }
-
-    public List<String> AddItemOrder() {
-        int count = 0;
-        int price = EdiblesList.getInstance().getPrice();
-        int payment = 0;
-        list = EdiblesList.getInstance().getList();
-        List<String> collect = new ArrayList<>();
-        for (int i=0; i<list.size(); i++){
-            for(int j=0; j<list.size(); j++) {
-                if(i!=j && list.get(i).equals(list.get(j))) {
-                    collect.add(list.get(j));
-                } else { collect.add(list.get(i));}
-            }
-        }
-        return collect;
-    }
 
     class EnterEmail implements EventHandler<ActionEvent> {
         @Override
@@ -108,15 +89,11 @@ public class OrderViewPage {
             // Enable/Disable confirm button depending on whether a username was entered.
             Node emailButton = dialog.getDialogPane().lookupButton(emailbtType);
             emailButton.setVisible(true);
-            emailButton.setOnMouseClicked(mouseEvent -> {
-                System.out.println("email");
-                new CrunchifyEmail(addemail);
-            });
 
             dialog.getDialogPane().setContent(grid);
 
             // Request focus on the email field by default.
-            Platform.runLater(() -> addemail.requestFocus());
+//            Platform.runLater(() -> addemail.requestFocus());
 
 //            Optional<String> result = dialog.showAndWait();
 //            if (result.isPresent()) {
@@ -134,36 +111,42 @@ public class OrderViewPage {
 //            }
 
             Optional<ButtonType> result = dialog.showAndWait();
-            if(result.get() == emailbtType) {
-                if (addemail.getText().length() > 0) {
-                    try {
-                        System.out.println("have text");
-                        generateAndSendEmail(addemail);
-                        OTP(6);
+            result.ifPresent(response -> {
+                if (result.get() == emailbtType) {
+                    if (addemail.getText().length() > 0) {
+                        try {
+                            System.out.println("have text");
+                            generateAndSendEmail(addemail);
+                            OTP(6);
 
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Success sending");
-                        alert.setHeaderText(null);
-                        alert.setContentText("We have already sent ordering code. Now, you can drive your car to " +
-                                "food waiting point for payment and getting food.");
-                        alert.showAndWait();
-                    } catch (AddressException ae) {
-                        System.out.println("error" + ae.getMessage());
-                        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                        alert.setTitle("Error Email Address");
-                        alert.setHeaderText(null);
-                        alert.setContentText("Cannot find your email address, please try again!");
-                        alert.showAndWait();
-                    } catch (MessagingException me) {
-                        System.out.println("error: " + me.getMessage());
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Success sending");
+                            alert.setHeaderText(null);
+                            alert.setContentText("We have already sent ordering code. Now, you can drive your car to " +
+                                    "food waiting point for payment and getting food.");
+                            alert.showAndWait();
+                        } catch (AddressException ae) {
+                            System.out.println("error" + ae.getMessage());
+                        } catch (MessagingException me) {
+                            System.out.println("error: msggg " + me.getMessage());
+                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                            alert.setTitle("Error Email Address");
+                            alert.setHeaderText(null);
+                            alert.setContentText("Cannot find your email address, please try again!");
+                            alert.showAndWait();
+                        }
+                    } else {
+                        System.out.println("no text");
                         addemail.setStyle("-fx-border-color: red;");
                         addemail.setPromptText("please enter your email");
+                        event.consume();
                     }
+                    System.out.println("ok");
                 }
-                System.out.println("ok");
-            } else if (result.get() == ButtonType.CANCEL) {
+            });
+                if (result.get() == ButtonType.CANCEL) {
                     System.out.println("out");
-            }
+                }
 
             dialog.setResultConverter(dialogButton -> {
                 if (dialogButton == emailbtType) {
@@ -174,7 +157,7 @@ public class OrderViewPage {
         }
     }
 
-    public void generateAndSendEmail(TextField email) throws AddressException, MessagingException {
+    public void generateAndSendEmail(TextField email) throws AddressException, MessagingException{
 
         String smtpHost="smtp.gmail.com";
         String smtpUser="hurrytime.drivethru@gmail.com";
@@ -201,7 +184,7 @@ public class OrderViewPage {
         generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(email.getText().trim()));
         generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress("boonyanuch.noey2000@gmail.com"));
         generateMailMessage.setSubject("Payment for Ordering food");
-        String emailBody = "Dear Valued Customers, <br> Now, our staff is preparing your order.  " +
+        String emailBody = "Dear Valued Customers, <br><br> Now, our staff is preparing your order.  " +
                 "Please drive to the Food Pick Up Point to get your order by showing OTP that we sent to you " +
                 "via e-mail. The payment can be settled by cash, E-wallet or debit/credit card.<br>" +
                 "Thank you for ordering with us.  We hope to serve you again in the near future. <br><br>" +
