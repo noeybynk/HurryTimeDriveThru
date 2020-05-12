@@ -112,6 +112,8 @@ public class ChooseOrder extends Application {
             minus.setOnAction(event -> {
                 System.out.println("-");
                 decreaseNumber(number);
+                int numInt = Integer.parseInt(number.getText());
+                EdiblesSingleton.getInstance().removeList(e, numInt);
             });
             Button add = new Button("+");
             add.setOnAction(event -> {
