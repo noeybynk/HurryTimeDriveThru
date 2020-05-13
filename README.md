@@ -7,7 +7,7 @@
     for you to choose at most 10 in each item. When you have finished choosing edibles, press the button 
     “confirm order”. The application will send you an email to get code to pay money and receive the food._
     
-## Prerequistic ##
+## Prerequisite ##
 - javaFX
 - Javax.mail
 - javax.swing
