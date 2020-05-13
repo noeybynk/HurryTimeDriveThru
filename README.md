@@ -1,4 +1,4 @@
-#HurryTime DriveThru
+# HurryTime DriveThru #
 
 - by Boonyanuch Kaewrakrob 6110546020
 
@@ -7,7 +7,7 @@
     for you to choose at most 10 in each item. When you have finished choosing edibles, press the button 
     “confirm order”. The application will send you an email to get code to pay money and receive the food._
     
-##How to use?
+##How to use? ##
 
 - When you are in the main stage, you can press the buttons to add/remove the order from your order list.
 - Textfield in each food is number of foods that you have chosen.
@@ -25,7 +25,7 @@
 - In the mail, you will get OTP code for your order. So, you can drive your car to food pick up point to get your order.
 ![boxmail](https://s3-ap-southeast-1.amazonaws.com/img-in-th/db105f80a77710b519b34aa8ec16ca87.jpg)
 
-##How to RUN .jar file
+##How to RUN .jar file ##
 
-###Contact
+###Contact ###
 If you have some problems about running jar file or any thing else, you can contact me [boonyanuch.kae@ku.th](boonyanuch.kae@ku.th)
