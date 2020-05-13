@@ -16,11 +16,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import javafx.scene.text.Font;
+
+import java.util.List;
 import java.util.Random;
 
 public class ChooseOrder extends Application {
     private Stage primaryStage;
-    private ListView<Label> listOrder;
+    private List<EdiblesItem> list;
+    private TextField number;
 
     public static void main(String[] args) { launch(args); }
 
@@ -56,7 +59,6 @@ public class ChooseOrder extends Application {
         menuLabel.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent mouseEvent) {
-                System.out.println("History");
                 OrderViewPage his = new OrderViewPage();
                 scrollPane.setContent(his.getRootpane());
             }
@@ -89,8 +91,6 @@ public class ChooseOrder extends Application {
         Random rng = new Random();
         VBox imgBox = new VBox();
         imgBox.setSpacing(30);
-//        TextField number = new TextField();
-        int count = 0;
 
         for (Edibles e : EdibleFactory.getEdibles(category)) {
             HBox horizon = new HBox(50);
@@ -106,20 +106,23 @@ public class ChooseOrder extends Application {
             name.setFont(new Font("elephant", 20.0));
             Label eachPrice = new Label(e.getPrice()+" Baht.");
             eachPrice.setFont(new Font("Arial", 18.0));
-            TextField number = new TextField(String.valueOf(count));
+            list = EdiblesSingleton.getInstance().getList();
+            TextField number = new TextField(String.valueOf(EdiblesSingleton.getInstance().findQuantity(name.getText())));
             number.setPrefWidth(50.0);
+
             Button minus = new Button("-");
             minus.setOnAction(event -> {
-                System.out.println("-");
                 decreaseNumber(number);
                 int numInt = Integer.parseInt(number.getText());
                 EdiblesSingleton.getInstance().removeList(e, numInt);
+//                number.setText(String.valueOf(numInt));
             });
             Button add = new Button("+");
             add.setOnAction(event -> {
                 System.out.println("+");
-                increaseNumber(number);
                 int numInt = Integer.parseInt(number.getText());
+                numInt++;
+                increaseNumber(number);
                 EdiblesSingleton.getInstance().addList(e, numInt);
             });
             addminus.getChildren().addAll(minus, number, add);

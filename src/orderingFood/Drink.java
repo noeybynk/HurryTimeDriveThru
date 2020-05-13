@@ -35,7 +35,6 @@ public enum Drink implements Edibles {
         this.price = price;
     }
 
-    //link
     public String nameWithSpace(String name) {
         char changes = '_';
         char[] char_text = name.toCharArray();
