@@ -24,7 +24,8 @@ public class EdiblesSingleton {
         if(list.size() > 0) {
             for(int i=0; i<list.size(); i++) {
                 if(list.get(i).getName().equals(edibles.nameWithSpace(edibles.toString()))) {
-                    list.get(i).SetTotalPrice(Integer.parseInt(edibles.getPrice()), quantity);
+                    list.get(i).setQuantity(quantity);
+                    list.get(i).setPrice(Integer.parseInt(edibles.getPrice()));
                     return;
                 }
             }
@@ -38,7 +39,8 @@ public class EdiblesSingleton {
         if (list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).getName().equals(edibles.nameWithSpace(edibles.toString()))) {
-                    list.get(i).SetTotalPrice(Integer.parseInt(edibles.getPrice()), quantity);
+                    list.get(i).setQuantity(quantity);
+                    list.get(i).setPrice(Integer.parseInt(edibles.getPrice()));
                     if(list.get(i).getPrice() == 0) {
                         list.remove(list.get(i));
                     }
@@ -53,4 +55,16 @@ public class EdiblesSingleton {
     public List<EdiblesItem> getList() {
         return this.list;
     }
+
+    public int findQuantity(String name) {
+        if(list.size() > 0) {
+            for (int i = 0; i < list.size(); i++) {
+                if(list.get(i).getName().equals(name)) {
+                    return list.get(i).getQuantity();
+                }
+            }
+        }
+        return 0;
+    }
+
 }

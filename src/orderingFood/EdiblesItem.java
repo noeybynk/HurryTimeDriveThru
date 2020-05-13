@@ -12,13 +12,18 @@ public class EdiblesItem {
     }
 
     public String getName() { return this.name; }
-    public int getPrice() { return this.price; }
-    public int getQuantity() {return this.quantity; }
-    public void SetTotalPrice(int price, int quantity) {
-        this.price = price*quantity;
+    public int getPrice() { return price*quantity; }
+
+    public void setQuantity(int quantity) {this.quantity = quantity;}
+    public int getQuantity() { return this.quantity; }
+
+    public void setPrice(int price) {
+        this.price = price;
     }
 
     public String toString() {
-        return getName() + " " + getPrice()*getQuantity() + "Baht.";
+        return getName() + " " + getPrice() + "Baht.";
     }
+
+
 }
