@@ -27,5 +27,20 @@
 
 ## How to RUN .jar file ##
 
+The command is:
+```
+> java -jar LengthConverter.jar
+```
+
+For Java 11 you need to specify the module path for JavaFX. Enter:
+```
+> java --module-path /path/to/javafx11/lib/ --add-modules javafx.controls -jar LengthConverter.jar
+```
+To save typing, put the "--module-path /path/to/javafx11/lib/ --add-modules javafx.controls" in a file
+named anything you like and type:
+```
+> java @filename -jar LengthConverter.jar
+```
+
 ### Contact ###
-If you have some problems about running jar file or any thing else, you can contact me [boonyanuch.kae@ku.th](boonyanuch.kae@ku.th)
+If you have some problems about running jar file or any thing else, you can contact me boonyanuch.kae@ku.th
