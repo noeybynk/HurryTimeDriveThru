@@ -20,13 +20,23 @@ import javafx.scene.text.Font;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * This class is a main class for add and remove the number of orders that you chose.
+ * There are many foods, drinks and desserts for you to choose at most 10 in each item.
+ * When you have finished choosing edibles, press the button “confirm order”.
+ * The application will send you an email to get code to pay money and receive the food.
+ *
+ * @author Boonyanuch Kaewrakrob
+ */
 public class ChooseOrder extends Application {
     private Stage primaryStage;
     private List<EdiblesItem> list;
     private TextField number;
 
+    /** show GUI for convert*/
     public static void main(String[] args) { launch(args); }
 
+    /** build GUI and show the scene graph on the stage.*/
     @Override
     public void start(Stage primaryStage) throws Exception {
         this.primaryStage = primaryStage;
@@ -39,6 +49,7 @@ public class ChooseOrder extends Application {
         primaryStage.show();
     }
 
+    /** initialize components for the scene graph to display. */
     private VBox initComponent() {
         VBox root = new VBox();
         ScrollPane scrollPane = new ScrollPane();
@@ -87,6 +98,7 @@ public class ChooseOrder extends Application {
         return root;
     }
 
+    /** Show list of edibles that you can choose. You can add and remove the orders.*/
     public VBox addListEdibles(String category) {
         Random rng = new Random();
         VBox imgBox = new VBox();
@@ -98,7 +110,8 @@ public class ChooseOrder extends Application {
             VBox description = new VBox(20);
             final ImageView image = new ImageView(e.getLink());
             image.setFitHeight(120);
-            image.setPreserveRatio(true);
+            image.setFitWidth(140);
+//            image.setPreserveRatio(true);
             image.setSmooth(true);
             image.setCache(true);
 
@@ -119,7 +132,6 @@ public class ChooseOrder extends Application {
             });
             Button add = new Button("+");
             add.setOnAction(event -> {
-                System.out.println("+");
                 int numInt = Integer.parseInt(number.getText());
                 numInt++;
                 increaseNumber(number);
@@ -139,6 +151,7 @@ public class ChooseOrder extends Application {
         return imgBox;
     }
 
+    /** Helper method for decreasing the number of edibles in textfield.*/
     public void decreaseNumber(TextField textField) {
         int total = 0;
         if(textField.getText().length() <= 0) {
@@ -152,6 +165,8 @@ public class ChooseOrder extends Application {
             textField.setText(String.valueOf(strtoInt));
         }
     }
+
+    /** Helper method for increasing the number of edibles in textfield.*/
     public void increaseNumber(TextField textField) {
         int total = 0;
         if(textField.getText().length() <= 0) {

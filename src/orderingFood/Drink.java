@@ -1,5 +1,9 @@
 package orderingFood;
 
+/**
+ * We want to get link and price to handle many kind of edibles. A good way to handle them is an enum.
+ * We will use enum to get link of image and price of each drink to show in the main.
+ */
 public enum Drink implements Edibles {
 
     Coke(
@@ -24,17 +28,22 @@ public enum Drink implements Edibles {
     Thaitea_blackpearl("https://s3-ap-southeast-1.amazonaws.com/img-in-th/754b5eebfbdd547bddac363b9957a8ca.png",
             "45");
 
+    // the first attribute of the enum members is link
     private final String link;
+    // the second attribute of the enum members is price
     private final String price;
 
+    // methods are just like in a class
     public String getLink() { return link; }
     public String getPrice() { return price; }
 
+    // enum constructor must be private
     private Drink(String link, String price) {
         this.link = link;
         this.price = price;
     }
 
+    /** To change the underscore to blank space.*/
     public String nameWithSpace(String name) {
         char changes = '_';
         char[] char_text = name.toCharArray();
