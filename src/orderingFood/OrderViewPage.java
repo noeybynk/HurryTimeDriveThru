@@ -56,7 +56,7 @@ public class OrderViewPage {
             Dialog dialog = new Dialog();
 //            TextInputDialog dialog = new TextInputDialog();
             dialog.setTitle("Email Sending");
-            dialog.setHeaderText("For sending the receiving code.");
+            dialog.setHeaderText("For sending the food receiving code.");
 
             // Set the icon (must be included in the project).
             ImageView img = new ImageView("https://s3-ap-southeast-1.amazonaws.com/img-in-th/1b05fc064cd3b611b4a52537be705963.png");
@@ -65,14 +65,7 @@ public class OrderViewPage {
             dialog.setGraphic(img);
 
             TextField addemail = new TextField();
-//            if(addemail.getText().length() > 0) {
-//                try {
-//                    System.out.println("eiei");
-//                } catch (NumberFormatException nfe) {
-//                    addemail.setStyle("-fx-border-color: red;");
-//                    addemail.setPromptText("please enter your email");
-//                }
-//            }
+            addemail.setPromptText("Please input your gmail address");
 
             // Set the button types.
             ButtonType emailbtType = new ButtonType("confirm!", ButtonBar.ButtonData.OK_DONE);
@@ -85,75 +78,60 @@ public class OrderViewPage {
             grid.add(new Label("email: "), 0, 0);
             grid.add(addemail, 1, 0);
 
-
             // Enable/Disable confirm button depending on whether a username was entered.
             Node emailButton = dialog.getDialogPane().lookupButton(emailbtType);
             emailButton.setVisible(true);
 
             dialog.getDialogPane().setContent(grid);
 
-            // Request focus on the email field by default.
-//            Platform.runLater(() -> addemail.requestFocus());
-
-//            Optional<String> result = dialog.showAndWait();
-//            if (result.isPresent()) {
-//                System.out.println("Your email: " + result.isPresent() + "has received code.");
-////                emailButton.setOnMouseClicked(mouseEvent -> {
-////                    if(addemail.getText().length() > 0) {
-////                        try {
-////                            System.out.println("eiei");
-////                        } catch (NumberFormatException nfe) {
-////                            addemail.setStyle("-fx-border-color: red;");
-////                            addemail.setPromptText("please enter your email");
-////                        }
-////                    }
-////                });
+            Optional result = dialog.showAndWait();
+            if (result.get() == emailbtType) {
+                resultForDialog(addemail);
+            }
+//            if (result.get() == ButtonType.CANCEL) {
+//                System.out.println("out");
 //            }
 
-            Optional<ButtonType> result = dialog.showAndWait();
-            result.ifPresent(response -> {
-                if (result.get() == emailbtType) {
-                    if (addemail.getText().length() > 0) {
-                        try {
-                            System.out.println("have text");
-                            generateAndSendEmail(addemail);
-                            OTP(6);
+            if(result.get() == addemail) {
+                addemail.setOnKeyPressed(e -> {
+                    resultForDialog(addemail);
+                });
+            }
+        }
+    }
 
-                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                            alert.setTitle("Success sending");
-                            alert.setHeaderText(null);
-                            alert.setContentText("We have already sent ordering code. Now, you can drive your car to " +
-                                    "food waiting point for payment and getting food.");
-                            alert.showAndWait();
-                        } catch (AddressException ae) {
-                            System.out.println("error" + ae.getMessage());
-                        } catch (MessagingException me) {
-                            System.out.println("error: msggg " + me.getMessage());
-                            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                            alert.setTitle("Error Email Address");
-                            alert.setHeaderText(null);
-                            alert.setContentText("Cannot find your email address, please try again!");
-                            alert.showAndWait();
-                        }
-                    } else {
-                        System.out.println("no text");
-                        addemail.setStyle("-fx-border-color: red;");
-                        addemail.setPromptText("please enter your email");
-                        event.consume();
-                    }
-                    System.out.println("ok");
-                }
-            });
-                if (result.get() == ButtonType.CANCEL) {
-                    System.out.println("out");
-                }
+    public void resultForDialog(TextField addemail) {
+        if(addemail.getText().length() > 0) {
+            try {
+                System.out.println("have text");
+                generateAndSendEmail(addemail);
+                OTP(6);
 
-            dialog.setResultConverter(dialogButton -> {
-                if (dialogButton == emailbtType) {
-                    return new TextField();
-                }
-                return null;
-            });
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Success sending");
+                alert.setHeaderText(null);
+                alert.setContentText("We have already sent ordering code. Now, you can drive your car to " +
+                        "food waiting point for payment and getting food.");
+                alert.showAndWait();
+                System.exit(0);
+            } catch (AddressException ae) {
+                System.out.println("error" + ae.getMessage());
+            } catch (MessagingException me) {
+                System.out.println("error: msggg " + me.getMessage());
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Error Email Address");
+                alert.setHeaderText(null);
+                alert.setContentText("Cannot find your email address, please try again!");
+                alert.showAndWait();
+            }
+        } else {
+            System.out.println("no text");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Warning");
+            alert.setHeaderText("Required Fields Empty");
+            alert.setContentText("The fields highlighted in red must be filled out.\nPlease try again.");
+            alert.showAndWait();
+            System.out.println("ok");
         }
     }
 
@@ -164,25 +142,23 @@ public class OrderViewPage {
         String smtpPassword="HurryTime123";
         int smtpPort=587;//Port may vary.Check yours smtp port
         // Step1
-        System.out.println("\n 1st ===> setup Mail Server Properties..");
+//        System.out.println("\n 1st ===> setup Mail Server Properties..");
         Properties mailServerProperties = System.getProperties();
-        //mailServerProperties.put("mail.smtp.ssl.trust", smtpHost);
-//        mailServerProperties.put("mail.smtp.starttls.enable", true); // added this line
         mailServerProperties.put("mail.smtp.host", smtpHost);
         mailServerProperties.put("mail.smtp.user", smtpUser);
         mailServerProperties.put("mail.smtp.password", smtpPassword);
         mailServerProperties.put("mail.smtp.port", smtpPort);
 
         mailServerProperties.put("mail.smtp.starttls.enable", "true");
-        System.out.println("Mail Server Properties have been setup successfully..");
+//        System.out.println("Mail Server Properties have been setup successfully..");
 
         // Step2
-        System.out.println("\n\n 2nd ===> get Mail Session..");
+//        System.out.println("\n\n 2nd ===> get Mail Session..");
         Session getMailSession = Session.getDefaultInstance(mailServerProperties, null);
         MimeMessage generateMailMessage = new MimeMessage(getMailSession);
         generateMailMessage.setFrom (new InternetAddress (smtpUser));
         generateMailMessage.addRecipient(Message.RecipientType.TO, new InternetAddress(email.getText().trim()));
-        generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress("boonyanuch.noey2000@gmail.com"));
+        generateMailMessage.addRecipient(Message.RecipientType.CC, new InternetAddress(smtpUser));
         generateMailMessage.setSubject("Payment for Ordering food");
         String emailBody = "Dear Valued Customers, <br><br> Now, our staff is preparing your order.  " +
                 "Please drive to the Food Pick Up Point to get your order by showing OTP that we sent to you " +
@@ -191,10 +167,10 @@ public class OrderViewPage {
                 "Yours sincerely,<br> Hurrytime Drivethru<br><br>Your OTP is : " + new String(OTP(6));
 
         generateMailMessage.setContent(emailBody, "text/html");
-        System.out.println("Mail Session has been created successfully..");
+//        System.out.println("Mail Session has been created successfully..");
 
         // Step3
-        System.out.println("\n\n 3rd ===> Get Session and Send mail");
+//        System.out.println("\n\n 3rd ===> Get Session and Send mail");
         Transport transport = getMailSession.getTransport("smtp");
 
         // Enter your correct gmail UserID and Password
@@ -205,24 +181,13 @@ public class OrderViewPage {
     }
 
     public char[] OTP(int len) {
-//        System.out.println("Generating OTP using random() : ");
-        System.out.print("Your OTP is : ");
-
-        // Using numeric values
         String numbers = "0123456789";
-
-        // Using random method
         Random rndm_method = new Random();
-
         char[] otp = new char[len];
 
-        for (int i = 0; i < len; i++)
-        {
-            // Use of charAt() method : to get character value
-            // Use of nextInt() as it is scanning the value as int
+        for (int i = 0; i < len; i++) {
             otp[i] = numbers.charAt(rndm_method.nextInt(numbers.length()));
         }
         return otp;
     }
 }
-
